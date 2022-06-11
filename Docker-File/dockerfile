@@ -1,0 +1,37 @@
+#base Image as Centos
+FROM centos:7
+
+RUN yum -y install wget apr-util-devel gcc pcre-devel libxml2-devel curl gcc-devel curl-devel httpd-devel make
+
+WORKDIR /root
+#Installing apache
+RUN wget https://www-eu.apache.org/dist/httpd/httpd-2.4.54.tar.gz  &&\
+    #Untar the package
+    tar -xvxf httpd-2.4.54.tar.gz  &&\
+    #remove the tar file
+    rm -rf httpd-2.4.54.tar.gz  &&\
+    cd httpd-2.4.54 &&\
+    ./configure && make clean && make && make install
+
+
+
+#Installing PHP
+RUN wget https://www.php.net/distributions/php-7.3.7.tar.gz &&\
+    #Untar the package
+    tar -xvzf php-7.3.7.tar.gz &&\
+    #remove the tar file
+    rm -rf php-7.3.7.tar.gz &&\
+    cd php-7.3.7 && ./configure --with-apxs2=/usr/local/apache2/bin/apxs --enable-mbstring --enable-mysqlnd --with-mysqli && make clean && make && make install 
+
+
+#Installing WIKIMEDIA
+RUN wget https://releases.wikimedia.org/mediawiki/1.24/mediawiki-1.24.2.tar.gz &&\
+    #Untar the package
+    tar -xvzf mediawiki-1.24.2.tar.gz &&\
+    #remove the tar file
+    rm -rf mediawiki-1.24.2.tar.gz &&\
+    mv mediawiki-1.24.2 /var/www/html/mediawiki
+
+
+CMD /usr/local/apache2/bin/apachectl -DFOREGROUND
+EXPOSE 80
