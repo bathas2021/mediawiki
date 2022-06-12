@@ -11,3 +11,11 @@ Steps to Deploy the Resources are-
   
 3. Goto Module and Test Directory to initialize the plugin  giving -Terraform init
 4. Goto Test Directory and give cmd-Terraform apply -auto-aprrove (for deploying resources)
+
+These Terraform File to deploy below mentioned Resources
+
+1.Azure resource Group-RG-wikimedia
+2.Azure Virtual Network with one Subnet
+3.Azure Kubernetes Clutser (with two node in the pool)
+4.Azure Container Registery
+5. Network Security Rules
