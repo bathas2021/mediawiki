@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+name: db-services
+labels:
+  app: wikimedia-db
+
+selector:
+  app: mariaDB
+spec:
+  selector:
+    app: wikimedia-db
+  ports:
+    - port: 3306
+      targetPort: db-port
+  type: ClusterIP
+
+---
+apiVersion: db/v1
+kind: Deployment
+metadata:
+  name: mariaDB
+  labels:
+    app: mariaDB
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariaDB
+
+    spec:
+      containers:
+        - name: wikimedia-DB
+          image: mariadb
+          ports:
+            - containerPort: 3306
+
+    env:
+      - name: MYSQL_USER
+        valueFrom:
+          secretKeyRef:
+            name: mediawiki-secrets
+            key: dbuser
+      - name: MYSQL_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: mediawiki-secrets
+            key: dbpassword
+      - name: MYSQL_ROOT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mediawiki-secrets
+            value: dbrootpassword
+      - name: MYSQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mediawiki-secrets
+            value: dbpassword
+    volumeMounts:
+      - name: wordpress-persistent-storage
+        mountPath: /var/lib/mysql
+
+  volumes:
+    - name: wordpress-persistent-storage
+      persistentVolumeClaim:
+        claimName: mariadb-pvc
