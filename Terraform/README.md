@@ -1,4 +1,4 @@
-Terraform Directory Contains the code to provisioning the resources in Azure Cloud Enviroment.
+##Terraform Directory Contains the code to provisioning the resources in Azure Cloud Enviroment.
 
 Steps to Deploy the Resources are-
 
